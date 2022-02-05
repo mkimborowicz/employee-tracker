@@ -4,6 +4,14 @@ const table = require('console.table');
 
 const PORT = process.env.PORT || 3001;
 
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        password: 'maddy123',
+        database: 'tracker_db'
+ },
+)
 
 const menu = [
     {
@@ -41,6 +49,11 @@ const role = [
     }
 ]
 
+let roleChoices = db.query(
+    'select id as value,, title as name from role'
+);
+
+
 const employee = [
     {
         type: "input",
@@ -55,7 +68,7 @@ const employee = [
     {
         type: "list",
         message: "What is the employee's role?",
-        choices: ["Sales lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer", "Customer Service"],
+        choices: roleChoices,
         name: "empRole"
     },
     {
@@ -65,19 +78,22 @@ const employee = [
         name: "empManager"
     }
 ]
-
+function askQuestion() {
 inquirer.prompt(menu).then((res)=>{
     switch(res.menu){
         case "View all departments":
-        showDepartments()
+        showDepartments();
+        askQuestion()
         break;
 
         case "View all roles":
         showRoles()
+        // askQuestion()
         break;
 
         case "View all employees":
         showEmployees()
+        // askQuestion()
         break;
 
         case "Add a department":
@@ -95,9 +111,28 @@ inquirer.prompt(menu).then((res)=>{
         case "Update an employee role":
         updateEmployee()
         break;
+    }
 
-        default:
-        createHTML()
-   
-}
 })
+}
+
+function showDepartments() {
+       db.query (`select * from department`, (err, result)  => {
+            console.table(result);
+        });
+    }
+
+    function showRoles() {
+        db.query (`select * from role`, (err, result)  => {
+             console.table(result);
+         });
+     }
+
+     function showEmployees() {
+        db.query (`select * from employee`, (err, result)  => {
+             console.table(result);
+         });
+     }
+
+askQuestion();
+
