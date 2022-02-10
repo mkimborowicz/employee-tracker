@@ -6,15 +6,15 @@ class DB {
     }
 
     getDepartments(){
-        return this.connection.promise().query('select * from department;');
+        return this.connection.promise().query('select * from department ORDER BY id;');
     }
 
     getRoles(){
-        return this.connection.promise().query('select role.title, role.id, department.name as department, role.salary from role left join department on role.department_id = department.id;');
+        return this.connection.promise().query('select role.title, role.id, department.name as department, role.salary from role left join department on role.department_id = department.id ORDER BY id;');
     }
 
     getEmployees(){
-        return this.connection.promise().query(`select employee.id, employee.first_name, employee.last_name, role.title, department.name as department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) as manager from employee left join role on employee.role_id = role.id left join department on role.department_id = department.id left join employee manager on manager.id = employee.manager_id;`)
+        return this.connection.promise().query(`select employee.id, employee.first_name, employee.last_name, role.title, department.name as department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) as manager from employee left join role on employee.role_id = role.id left join department on role.department_id = department.id left join employee manager on manager.id = employee.manager_id ORDER BY id;`)
     }
 
     createEmployee(employee){

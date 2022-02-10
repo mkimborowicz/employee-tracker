@@ -1,4 +1,3 @@
-const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const table = require("console.table");
 const db = require("./db");
@@ -88,8 +87,9 @@ function addDepartment() {
       },
     ])
     .then((res) => {
-      let newDept = { name: res.newDept };
-      db.createDepartment(newDept).then(() => console.log(`Added ${newDept} to the database`)).then(() => askQuestion());
+      const deptName = res.newDept
+      let newDept = { name: deptName };
+      db.createDepartment(newDept).then(() => console.log(`Added ${deptName} to the database`)).then(() => askQuestion());
     });
 }
 
@@ -246,4 +246,4 @@ function addEmployee() {
 
 // }
 
-// askQuestion();
+askQuestion();
